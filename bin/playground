@@ -1,3 +1,4 @@
 #!/bin/sh -eux
 
-curl -XPOST -H "Content-Type: application/json" 127.1:4000/graphql -d '{ "query": "{ hello }" }'
+curl -X POST -H "Content-Type: application/json" 127.1:4000/graphql -d '{ "query": "{ hello }" }'
+curl -X POST -H "Content-Type: application/json" 127.1:4000/graphql -d '{ "query": "{ add }" }'
