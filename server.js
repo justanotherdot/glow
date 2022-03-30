@@ -2,11 +2,12 @@ const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
 const { hello, add } = require('./resolvers');
+const { get } = require('lodash/fp');
 
 const schema = buildSchema(`
   type Query {
     hello: String,
-    add: String,
+    add(x: Float, y: Float): String,
   }
 `);
 
@@ -14,8 +15,10 @@ const root = {
   hello: () => {
     return hello();
   },
-  add: () => {
-    return add();
+  add: (obj, args, context, info) => {
+    const x = get('x', obj);
+    const y = get('y', obj);
+    return add(x, y);
   },
 };
 
