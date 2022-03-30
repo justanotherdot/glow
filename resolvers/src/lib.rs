@@ -1,11 +1,19 @@
 use neon::prelude::*;
 
 fn hello(mut cx: FunctionContext) -> JsResult<JsString> {
-    Ok(cx.string("hello from rust."))
+    unsafe {
+        let lib = libloading::Library::new(
+            "./resolvers/resolvers-core/target/release/libresolvers_core.so",
+        )
+        .expect("dlopen");
+        let extern_hello: libloading::Symbol<unsafe extern "C" fn() -> u32> =
+            lib.get(b"hello").expect("symbol lookup");
+        Ok(cx.string(format!("{}", extern_hello())))
+    }
 }
 
 fn add(mut cx: FunctionContext) -> JsResult<JsString> {
-    Ok(cx.string(format!("{}", 2 + 2)))
+    Ok(cx.string(format!("{}", 1 + 2)))
 }
 
 #[neon::main]
